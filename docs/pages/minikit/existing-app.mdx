@@ -1,26 +1,34 @@
 # Integrating MiniKit with Existing Apps
 
-This guide will walk you through the process of adding MiniKit to an existing application. By following these steps, you can transform your existing app into a Mini App that can be distributed through Farcaster and Base platforms.
+This guide will walk you through the process of adding MiniKit to an existing application. By following these steps, you can transform your existing app into a Mini App that can be published on Farcaster and Base.
 
 ## Prerequisites
 
-Before getting started, make sure your project meets these requirements:
+Before you begin developing with MiniKit, you'll need:
 
-- Next.js application (version 13 or higher recommended)
-- Node.js (version 18 or higher)
-- Package manager (npm, yarn, or pnpm)
+- **Next.js application** (version 15 or higher recommended)
+- **Node.js** (version 18 or higher)
+- **Package manager** (npm, yarn, or pnpm)
+- **[Farcaster Account](https://warpcast.com/)**: Create an account on Farcaster to test and deploy your Mini Apps.
+- **[Coinbase Developer Platform Account](https://www.coinbase.com/en-nl/developer-platform)** (Optional): Sign up for a Coinbase Developer Platform to retrieve your CDP API key.
 
 ## Step 1: Install Dependencies
 
 First, install the required dependencies:
 
+npm
+
 ```bash npm
 npm install @coinbase/onchainkit viem@latest
 ```
 
+yarn
+
 ```bash yarn
 yarn add @coinbase/onchainkit viem@latest
 ```
+
+pnpm
 
 ```bash pnpm
 pnpm add @coinbase/onchainkit viem@latest
@@ -30,7 +38,7 @@ MiniKit requires the latest version of viem for proper integration with blockcha
 
 ## Step 2: Add MiniKitProvider
 
-Wrap your application with the `MiniKitProvider` component to enable MiniKit features:
+Wrap your application with the `providers/MiniKitProvider.tsx` component to enable MiniKit hooks anywhere in your app:
 
 ```jsx
 import { MiniKitProvider as MKProvider } from "@coinbase/onchainkit/minikit";
@@ -60,7 +68,7 @@ export function MiniKitProvider(props: { children: ReactNode }) {
 For Next.js apps using the App Router, update your `app/layout.js` or `app/layout.tsx` file:
 
 ```jsx
-import { MiniKitProvider } from "@coinbase/onchainkit/minikit";
+import { MiniKitProvider } from "@/providers/MiniKitProvider";
 
 export default function RootLayout({ children }) {
   return (
