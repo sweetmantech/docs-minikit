@@ -81,7 +81,7 @@ export default function RootLayout({ children }) {
 }
 ```
 
-## Step 3: Using the useMiniKit Hook
+## Step 3: Using the useMiniKit Hook from Base
 
 After setting up the MiniKitProvider, you need to initialize your app using the `useMiniKit` hook in your main page component. This is critical for proper frame initialization and displaying your content.
 
@@ -158,7 +158,7 @@ npx create-onchain --manifest
 
 This command will help you set up your environment variables with proper values.
 
-## Step 5: Generate Manifest
+## Step 5: Generate Manifest for Farcaster
 
 Create a route handler for the Farcaster integration at `app/.well-known/farcaster.json/route.ts`:
 
@@ -187,69 +187,35 @@ export async function GET() {
 }
 ```
 
-This route handler dynamically generates the Farcaster integration JSON using your environment variables, which is more flexible than using a static file.
+This route handler dynamically generates the Farcaster integration JSON using your environment variables, providing a flexible and maintainable approach.
 
-## Step 6: Configure Farcaster.json
-
-Create a `.well-known/farcaster.json` file in your public directory to enable Farcaster integration:
-
-```json
-{
-  "accountAssociation": {
-    "header": "${FARCASTER_HEADER}",
-    "payload": "${FARCASTER_PAYLOAD}",
-    "signature": "${FARCASTER_SIGNATURE}"
-  },
-  "frame": {
-    "version": "${NEXT_PUBLIC_VERSION}",
-    "name": "${NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME}",
-    "iconUrl": "${NEXT_PUBLIC_ICON_URL}",
-    "splashImageUrl": "${NEXT_PUBLIC_SPLASH_IMAGE_URL}",
-    "splashBackgroundColor": "${NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR}",
-    "homeUrl": "${NEXT_PUBLIC_URL}"
-  }
-}
-```
-
-The account association values (header, payload, signature) need to be generated specifically for your domain. Use the MiniKit CLI to generate these values.
-
-Generate these values by running:
-
-```bash
-npx create-onchain --association
-```
-
-Follow the prompts to create account association values for your domain.
-
-## Step 7: Generate Metadata
+## Step 6: use generateMetadata from NextJS
 
 Create a `generateMetadata` function in your app page to improve SEO and discovery:
 
 ```jsx
-// app/page.tsx or app/page.js
+// app/layout.tsx or app/layout.js
 import { Metadata } from "next";
 
 export const generateMetadata = (): Metadata => {
   return {
     title: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
     description: `${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME} - A MiniKit App`,
-    openGraph: {
-      title: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
-      description: `${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME} - A MiniKit App`,
-      images: [
-        {
-          url: process.env.NEXT_PUBLIC_IMAGE_URL || "",
-          width: 1200,
-          height: 630,
-          alt: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
+    other: {
+      "fc:frame": JSON.stringify({
+        version: process.env.NEXT_PUBLIC_VERSION,
+        imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
+        button: {
+          title: `Launch ${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME}`,
+          action: {
+            type: "launch_frame",
+            name: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
+            url: URL,
+            splashImageUrl: process.env.NEXT_PUBLIC_SPLASH_IMAGE_URL,
+            splashBackgroundColor: `#${process.env.NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR}`,
+          },
         },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
-      description: `${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME} - A MiniKit App`,
-      images: [process.env.NEXT_PUBLIC_IMAGE_URL || ""],
+      }),
     },
   };
 };
@@ -259,9 +225,9 @@ export default function Page() {
 }
 ```
 
-## Step 8: Vercel Environment Configuration
+## Step 7: Vercel Environment Configuration
 
-When deploying to Vercel, add all the environment variables to your project settings:
+When deploying to Vercel, add all the environment variables from your `.env` or `.env.local` file to your project settings:
 
 1. Go to your Vercel project dashboard
 2. Navigate to Settings > Environment Variables
@@ -279,34 +245,16 @@ When deploying to Vercel, add all the environment variables to your project sett
    - `FARCASTER_SIGNATURE`
 4. Ensure all variables have the correct Production, Preview, and Development settings
 
-Additionally, configure these build settings:
-
-- Set the Node.js version to 18 or higher
-- Make sure that the output directory is set to `.next` if you're using Next.js
-
-## Step 9: Farcaster Publishing
+## Step 8: Farcaster Publishing
 
 To publish your app on Farcaster:
 
 1. Ensure your app is deployed with a valid domain
-2. Verify your account association is correctly set up
-3. Make sure your `.well-known/farcaster.json` file is accessible
+2. Make sure your `.well-known/farcaster.json` file is accessible in `/app/.well-known/farcaster.json`
+3. Visit the [Warpcast Mini Apps developer portal](https://warpcast.com/~/developers/mini-apps/) to submit your Mini App
 4. Create a cast with a link to your app to share it with the Farcaster community
 
-For optimal discovery:
-
-- Use relevant hashtags when sharing your app
-- Include screenshots or GIFs showing your app in action
-- Tag relevant Farcaster channels or communities
-
-## Troubleshooting
-
-If you encounter issues integrating MiniKit:
-
-- Check that all environment variables are correctly set
-- Verify your `.well-known/farcaster.json` file is accessible via your domain
-- Ensure you're using the latest versions of OnchainKit and viem
-- Check the browser console for any errors related to MiniKit initialization
+The Warpcast verification tool will check your domain for proper configuration. Your Mini App must pass all verification checks before it can be published.
 
 ## Next Steps
 
@@ -314,6 +262,6 @@ After integrating MiniKit into your app:
 
 - Explore the [official MiniKit documentation](https://docs.base.org/builderkits/minikit/overview?utm_source=sweetman&utm_medium=x&utm_campaign=minikit2&utm_id=ddr) for advanced features
 - Join the [Base Discord](https://discord.gg/buildonbase) for community support
-- Check out example MiniKit apps for inspiration
+- Check out example [MiniApps](https://warpcast.com/miniapps) for inspiration
 
 For more detailed information about specific MiniKit hooks and components, refer to the [official documentation](https://docs.base.org/builderkits/minikit/overview?utm_source=sweetman&utm_medium=x&utm_campaign=minikit2&utm_id=ddr).
