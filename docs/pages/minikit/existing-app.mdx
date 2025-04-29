@@ -36,7 +36,7 @@ pnpm add @coinbase/onchainkit viem@latest
 
 MiniKit requires the latest version of viem for proper integration with blockchain functionality. Using an outdated version can cause integration errors, as demonstrated in [this livestream I did](https://www.youtube.com/live/WuxYq38bRAE?si=HDGOeXO7MtJQz_5D&t=701).
 
-## Step 2: Add MiniKitProvider
+## Step 2: MiniKitProvider
 
 Wrap your application with the `providers/MiniKitProvider.tsx` component to enable MiniKit hooks anywhere in your app:
 
@@ -81,7 +81,7 @@ export default function RootLayout({ children }) {
 }
 ```
 
-## Step 3: Using the useMiniKit Hook from Base
+## Step 3: useMiniKit
 
 After setting up the MiniKitProvider, you need to initialize your app using the `useMiniKit` hook in your main page component. This is critical for proper frame initialization and displaying your content.
 
@@ -123,7 +123,7 @@ This code does several important things:
 
 Without this initialization, your frame content might not be properly displayed to users.
 
-## Step 4: Configure Environment Variables
+## Step 4: .env
 
 Create or update your `.env.local` file with the required environment variables:
 
@@ -144,6 +144,8 @@ FARCASTER_PAYLOAD=# generate with minikit cli
 FARCASTER_SIGNATURE=# generate with minikit cli
 ```
 
+> **Important Note:** The MiniKit CLI specifically requires using a `.env` file (not `.env.local`). Make sure to create both files with identical content, or copy your variables from `.env.local` to `.env` when using the CLI tools.
+
 Key variables:
 
 - `NEXT_PUBLIC_CDP_CLIENT_API_KEY`: Your CDP API key for authentication (get it from [Coinbase Developer Portal](https://portal.cdp.coinbase.com/projects/api-keys))
@@ -158,7 +160,7 @@ npx create-onchain --manifest
 
 This command will help you set up your environment variables with proper values.
 
-## Step 5: Generate Manifest for Farcaster
+## Step 5: .well-known/farcaster.json
 
 Create a route handler for the Farcaster integration at `app/.well-known/farcaster.json/route.ts`:
 
@@ -189,7 +191,7 @@ export async function GET() {
 
 This route handler dynamically generates the Farcaster integration JSON using your environment variables, providing a flexible and maintainable approach.
 
-## Step 6: use generateMetadata from NextJS
+## Step 6: generateMetadata
 
 Create a `generateMetadata` function in your app page to improve SEO and discovery:
 
@@ -225,9 +227,9 @@ export default function Page() {
 }
 ```
 
-## Step 7: Vercel Environment Configuration
+## Step 7: Vercel
 
-When deploying to Vercel, add all the environment variables from your `.env` or `.env.local` file to your project settings:
+When deploying to Vercel using `vercel`, add all the environment variables from your `.env` or `.env.local` file to your project settings:
 
 1. Go to your Vercel project dashboard
 2. Navigate to Settings > Environment Variables
