@@ -1,0 +1,40 @@
+# MiniKit
+
+MiniKit is easiest way to build Mini Apps on Base, allowing developers to easily build applications without needing to know the details of the SDK implementation. It integrates seamlessly with OnchainKit components and provides Coinbase Wallet-specific hooks.
+
+> This documentation is based on the [official MiniKit documentation](https://docs.base.org/builderkits/minikit/overview?utm_source=sweetman&utm_medium=x&utm_campaign=minikit2&utm_id=ddr). Visit the official docs for the most up-to-date information.
+
+## Why MiniKit?
+
+MiniKit streamlines mini-app development by providing a comprehensive toolkit that makes complex Frames SDK interactions intuitive:
+
+- **Simplified Development:** Build apps with minimal knowledge of the Frames SDK
+- **Coinbase Wallet Integration:** Access Coinbase Wallet-specific hooks
+- **Component Compatibility:** Use OnchainKit components out of the box with MiniKit
+- **Automatic Setup:** CLI tool for quick project scaffolding with webhooks and notifications
+- **Account Association:** Simplified generation of account associations
+- **Cross-Platform Publishing:** Distribute your app to iPhone and Android users via Farcaster and Base
+- **Mobile-Ready:** Create apps that work seamlessly on mobile devices without building native applications
+
+## Quick Start
+
+The fastest way to get started with MiniKit is to use the CLI to bootstrap a new project:
+
+```bash
+npx create-onchain --mini
+```
+
+You can also follow our [Quick Start guide](/minikit/quickstart)
+
+This command will:
+
+1. Set up a new project with both frontend and backend components
+2. Configure webhooks and notifications
+3. Set up account association generation
+4. Create a demo app showcasing onchain abilities using OnchainKit
+
+After running the command, follow the prompts to configure your project.
+
+We recommend using Vercel to deploy your MiniKit app, as it integrates seamlessly with the upstash/redis backend required for frames, webhooks, and notifications. The CLI will guide you through setting up the necessary environment variables for your Redis database.
+
+For more detailed information about MiniKit features, check out the [official Base documentation](https://docs.base.org/builderkits/minikit/overview?utm_source=sweetman&utm_medium=x&utm_campaign=minikit2&utm_id=ddr).
