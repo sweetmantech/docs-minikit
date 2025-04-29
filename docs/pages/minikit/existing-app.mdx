@@ -81,7 +81,49 @@ export default function RootLayout({ children }) {
 }
 ```
 
-## Step 3: Configure Environment Variables
+## Step 3: Using the useMiniKit Hook
+
+After setting up the MiniKitProvider, you need to initialize your app using the `useMiniKit` hook in your main page component. This is critical for proper frame initialization and displaying your content.
+
+Add the following to your main page component (e.g., `app/page.tsx`):
+
+```jsx
+"use client";
+
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
+import { useEffect } from "react";
+
+const HomePage = () => {
+  const { setFrameReady, isFrameReady } = useMiniKit();
+
+  // The setFrameReady() function is called when your mini-app is ready to be shown
+  useEffect(() => {
+    if (!isFrameReady) {
+      setFrameReady();
+    }
+  }, [setFrameReady, isFrameReady]);
+
+  return (
+    <div className="flex flex-col size-full items-center">
+      {/* Your app content goes here */}
+      <h1>My MiniKit App</h1>
+    </div>
+  );
+};
+
+export default HomePage;
+```
+
+This code does several important things:
+
+1. Uses the `"use client"` directive to ensure client-side rendering of components that use hooks
+2. Imports the `useMiniKit` hook from the OnchainKit library
+3. Calls `setFrameReady()` when your component mounts to notify the frame that your app is ready to be displayed
+4. Ensures the function is only called once by using the `isFrameReady` flag
+
+Without this initialization, your frame content might not be properly displayed to users.
+
+## Step 4: Configure Environment Variables
 
 Create or update your `.env.local` file with the required environment variables:
 
@@ -104,13 +146,19 @@ FARCASTER_SIGNATURE=# generate with minikit cli
 
 Key variables:
 
-- `NEXT_PUBLIC_CDP_CLIENT_API_KEY`: Your CDP API key for authentication
-- `NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME`: Your project's name
+- `NEXT_PUBLIC_CDP_CLIENT_API_KEY`: Your CDP API key for authentication (get it from [Coinbase Developer Portal](https://portal.cdp.coinbase.com/projects/api-keys))
 - `NEXT_PUBLIC_URL`: Your application's domain URL
-- `NEXT_PUBLIC_ICON_URL`, `NEXT_PUBLIC_IMAGE_URL`, `NEXT_PUBLIC_SPLASH_IMAGE_URL`: URLs for your app's visual assets
 - `FARCASTER_HEADER`, `FARCASTER_PAYLOAD`, `FARCASTER_SIGNATURE`: Generated using the MiniKit CLI for Farcaster integration
 
-## Step 4: Generate Manifest
+To generate the `FARCASTER_HEADER`, `FARCASTER_PAYLOAD`, `FARCASTER_SIGNATURE` environment variables automatically, you can use the MiniKit CLI:
+
+```bash
+npx create-onchain --manifest
+```
+
+This command will help you set up your environment variables with proper values.
+
+## Step 5: Generate Manifest
 
 Create a manifest file to define your app's properties and capabilities. Add a file at `app/manifest.js` or `app/manifest.ts`:
 
@@ -142,7 +190,7 @@ export default function manifest(): MetadataRoute.Manifest {
 }
 ```
 
-## Step 5: Configure Farcaster.json
+## Step 6: Configure Farcaster.json
 
 Create a `.well-known/farcaster.json` file in your public directory to enable Farcaster integration:
 
@@ -174,7 +222,7 @@ npx create-onchain --association
 
 Follow the prompts to create account association values for your domain.
 
-## Step 6: Generate Metadata
+## Step 7: Generate Metadata
 
 Create a `generateMetadata` function in your app page to improve SEO and discovery:
 
@@ -212,7 +260,7 @@ export default function Page() {
 }
 ```
 
-## Step 7: Vercel Environment Configuration
+## Step 8: Vercel Environment Configuration
 
 When deploying to Vercel, add all the environment variables to your project settings:
 
@@ -237,7 +285,7 @@ Additionally, configure these build settings:
 - Set the Node.js version to 18 or higher
 - Make sure that the output directory is set to `.next` if you're using Next.js
 
-## Step 8: Farcaster Publishing
+## Step 9: Farcaster Publishing
 
 To publish your app on Farcaster:
 
@@ -251,50 +299,6 @@ For optimal discovery:
 - Use relevant hashtags when sharing your app
 - Include screenshots or GIFs showing your app in action
 - Tag relevant Farcaster channels or communities
-
-## Using MiniKit Hooks
-
-Once your app is set up with MiniKit, you can use its various hooks to enhance functionality:
-
-```jsx
-import {
-  useMiniKit,
-  useAddFrame,
-  useNotification,
-} from "@coinbase/onchainkit/minikit";
-import { useEffect } from "react";
-
-function MyComponent() {
-  const { setFrameReady, isFrameReady } = useMiniKit();
-  const addFrame = useAddFrame();
-  const sendNotification = useNotification();
-
-  // Set frame as ready when component mounts
-  useEffect(() => {
-    if (!isFrameReady) {
-      setFrameReady();
-    }
-  }, [isFrameReady, setFrameReady]);
-
-  const handleAddFrame = async () => {
-    const result = await addFrame();
-    if (result) {
-      console.log("Frame added:", result);
-    }
-  };
-
-  return (
-    <div>
-      <button onClick={handleAddFrame}>Add to Frames</button>
-      <button
-        onClick={() => sendNotification({ title: "Hello", body: "World" })}
-      >
-        Send Notification
-      </button>
-    </div>
-  );
-}
-```
 
 ## Troubleshooting
 
