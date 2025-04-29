@@ -8,6 +8,10 @@ export default defineConfig({
       link: "/minikit",
     },
     {
+      text: "Quick Start Guide",
+      link: "/minikit/quickstart",
+    },
+    {
       text: "Existing App Integration",
       link: "/minikit/existing-app",
     },
