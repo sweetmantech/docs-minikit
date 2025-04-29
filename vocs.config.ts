@@ -1,15 +1,28 @@
-import { defineConfig } from 'vocs'
+import { defineConfig } from "vocs";
 
 export default defineConfig({
-  title: 'Docs',
+  title: "MiniKit",
   sidebar: [
     {
-      text: 'Getting Started',
-      link: '/getting-started',
+      text: "Overview",
+      link: "/minikit",
     },
     {
-      text: 'Example',
-      link: '/example',
+      text: "Quickstart",
+      link: "/minikit/quickstart",
+    },
+    {
+      text: "Resources",
+      items: [
+        {
+          text: "GitHub",
+          link: "https://github.com/base-org/minikit",
+        },
+        {
+          text: "Base Documentation",
+          link: "https://docs.base.org/builderkits/minikit/overview?utm_source=sweetman&utm_medium=x&utm_campaign=minikit2&utm_id=ddr",
+        },
+      ],
     },
   ],
-})
+});

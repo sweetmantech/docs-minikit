@@ -2,15 +2,29 @@
 layout: landing
 ---
 
-import { HomePage } from 'vocs/components'
+import { HomePage } from "vocs/components";
 
 <HomePage.Root>
   <HomePage.Logo />
-  <HomePage.Tagline>My Awesome Docs</HomePage.Tagline>
-  <HomePage.InstallPackage name="vocs" type="init" />
-  <HomePage.Description>This is a description of my documentation website.</HomePage.Description>
+  <HomePage.Tagline>MiniKit</HomePage.Tagline>
+  <HomePage.Description>
+    One SDK to publish your app on both iPhone and Android.
+  </HomePage.Description>
+
+{" "}
+
+<HomePage.Description>
+  MiniKit provides a simple wrapper for your ReactJS applications, enabling
+  instant distribution across iPhone and Android devices via Base and Farcaster
+  social feeds.
+</HomePage.Description>
+
   <HomePage.Buttons>
-    <HomePage.Button href="/getting-started" variant="accent">Get started</HomePage.Button>
-    <HomePage.Button href="https://github.com/wevm/vocs">GitHub</HomePage.Button>
+    <HomePage.Button href="/minikit" variant="accent">
+      Getting Started
+    </HomePage.Button>
+    <HomePage.Button href="https://docs.base.org/builderkits/minikit/overview?utm_source=sweetman&utm_medium=x&utm_campaign=minikit2&utm_id=ddr">
+      Base Docs
+    </HomePage.Button>
   </HomePage.Buttons>
 </HomePage.Root>
