@@ -8,7 +8,7 @@ export default defineConfig({
       link: "/minikit",
     },
     {
-      text: "Quick Start Guide",
+      text: "Quickstart",
       link: "/minikit/quickstart",
     },
     {
