@@ -160,35 +160,34 @@ This command will help you set up your environment variables with proper values.
 
 ## Step 5: Generate Manifest
 
-Create a manifest file to define your app's properties and capabilities. Add a file at `app/manifest.js` or `app/manifest.ts`:
+Create a route handler for the Farcaster integration at `app/.well-known/farcaster.json/route.ts`:
 
-```jsx
-import { MetadataRoute } from "next";
+```tsx
+export async function GET() {
+  const URL = process.env.NEXT_PUBLIC_URL;
 
-export default function manifest(): MetadataRoute.Manifest {
-  return {
-    name: "Your App Name",
-    short_name: "App",
-    description: "Description of your app",
-    start_url: "/",
-    display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#000000",
-    icons: [
-      {
-        src: "/icon.png",
-        sizes: "192x192",
-        type: "image/png",
-      },
-      {
-        src: "/icon-512.png",
-        sizes: "512x512",
-        type: "image/png",
-      },
-    ],
-  };
+  return Response.json({
+    accountAssociation: {
+      header: process.env.FARCASTER_HEADER,
+      payload: process.env.FARCASTER_PAYLOAD,
+      signature: process.env.FARCASTER_SIGNATURE,
+    },
+    frame: {
+      version: process.env.NEXT_PUBLIC_VERSION,
+      name: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
+      homeUrl: URL,
+      iconUrl: process.env.NEXT_PUBLIC_ICON_URL,
+      imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
+      buttonTitle: `Launch ${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME}`,
+      splashImageUrl: process.env.NEXT_PUBLIC_SPLASH_IMAGE_URL,
+      splashBackgroundColor: `#${process.env.NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR}`,
+      webhookUrl: `${URL}/api/webhook`,
+    },
+  });
 }
 ```
+
+This route handler dynamically generates the Farcaster integration JSON using your environment variables, which is more flexible than using a static file.
 
 ## Step 6: Configure Farcaster.json
 
