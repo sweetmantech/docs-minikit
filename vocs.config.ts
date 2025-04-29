@@ -16,7 +16,7 @@ export default defineConfig({
       items: [
         {
           text: "GitHub",
-          link: "https://github.com/base-org/minikit",
+          link: "https://github.com/sweetmantech/docs-minikit",
         },
         {
           text: "Base Documentation",
