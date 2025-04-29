@@ -1,0 +1,308 @@
+# Integrating MiniKit with Existing Apps
+
+This guide will walk you through the process of adding MiniKit to an existing application. By following these steps, you can transform your existing app into a Mini App that can be distributed through Farcaster and Base platforms.
+
+## Prerequisites
+
+Before getting started, make sure your project meets these requirements:
+
+- Next.js application (version 13 or higher recommended)
+- Node.js (version 18 or higher)
+- Package manager (npm, yarn, or pnpm)
+
+## Step 1: Install Dependencies
+
+First, install the required dependencies:
+
+```bash npm
+npm install @coinbase/onchainkit viem@latest
+```
+
+```bash yarn
+yarn add @coinbase/onchainkit viem@latest
+```
+
+```bash pnpm
+pnpm add @coinbase/onchainkit viem@latest
+```
+
+MiniKit requires the latest version of viem for proper integration with blockchain functionality.
+
+## Step 2: Add MiniKitProvider
+
+Wrap your application with the `MiniKitProvider` component to enable MiniKit features:
+
+```jsx
+import { MiniKitProvider as MKProvider } from "@coinbase/onchainkit/minikit";
+import { ReactNode } from "react";
+import { base } from "viem/chains";
+
+export function MiniKitProvider(props: { children: ReactNode }) {
+  return (
+    <MKProvider
+      apiKey={process.env.NEXT_PUBLIC_CDP_CLIENT_API_KEY}
+      chain={base}
+      config={{
+        appearance: {
+          mode: "auto",
+          theme: "snake",
+          name: "process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME",
+          logo: process.env.NEXT_PUBLIC_ICON_URL,
+        },
+      }}
+    >
+      {props.children}
+    </MKProvider>
+  );
+}
+```
+
+For Next.js apps using the App Router, update your `app/layout.js` or `app/layout.tsx` file:
+
+```jsx
+import { MiniKitProvider } from "@coinbase/onchainkit/minikit";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <MiniKitProvider>{children}</MiniKitProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+## Step 3: Configure Environment Variables
+
+Create or update your `.env.local` file with the required environment variables:
+
+```
+# MiniKit Configuration
+NEXT_PUBLIC_CDP_CLIENT_API_KEY=# your cdp api key id
+NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME=my-minikit-app
+NEXT_PUBLIC_ICON_URL=https://example.com/icon.png
+NEXT_PUBLIC_URL=https://example.com
+NEXT_PUBLIC_VERSION=next
+NEXT_PUBLIC_IMAGE_URL=https://example.com/image.png
+NEXT_PUBLIC_SPLASH_IMAGE_URL=https://example.com/splash.png
+NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR=FFFFFF
+
+# Farcaster Integration (generate with minikit cli)
+FARCASTER_HEADER=# generate with minikit cli
+FARCASTER_PAYLOAD=# generate with minikit cli
+FARCASTER_SIGNATURE=# generate with minikit cli
+```
+
+Key variables:
+
+- `NEXT_PUBLIC_CDP_CLIENT_API_KEY`: Your CDP API key for authentication
+- `NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME`: Your project's name
+- `NEXT_PUBLIC_URL`: Your application's domain URL
+- `NEXT_PUBLIC_ICON_URL`, `NEXT_PUBLIC_IMAGE_URL`, `NEXT_PUBLIC_SPLASH_IMAGE_URL`: URLs for your app's visual assets
+- `FARCASTER_HEADER`, `FARCASTER_PAYLOAD`, `FARCASTER_SIGNATURE`: Generated using the MiniKit CLI for Farcaster integration
+
+## Step 4: Generate Manifest
+
+Create a manifest file to define your app's properties and capabilities. Add a file at `app/manifest.js` or `app/manifest.ts`:
+
+```jsx
+import { MetadataRoute } from "next";
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: "Your App Name",
+    short_name: "App",
+    description: "Description of your app",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#ffffff",
+    theme_color: "#000000",
+    icons: [
+      {
+        src: "/icon.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        src: "/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+  };
+}
+```
+
+## Step 5: Configure Farcaster.json
+
+Create a `.well-known/farcaster.json` file in your public directory to enable Farcaster integration:
+
+```json
+{
+  "accountAssociation": {
+    "header": "${FARCASTER_HEADER}",
+    "payload": "${FARCASTER_PAYLOAD}",
+    "signature": "${FARCASTER_SIGNATURE}"
+  },
+  "frame": {
+    "version": "${NEXT_PUBLIC_VERSION}",
+    "name": "${NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME}",
+    "iconUrl": "${NEXT_PUBLIC_ICON_URL}",
+    "splashImageUrl": "${NEXT_PUBLIC_SPLASH_IMAGE_URL}",
+    "splashBackgroundColor": "${NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR}",
+    "homeUrl": "${NEXT_PUBLIC_URL}"
+  }
+}
+```
+
+The account association values (header, payload, signature) need to be generated specifically for your domain. Use the MiniKit CLI to generate these values.
+
+Generate these values by running:
+
+```bash
+npx create-onchain --association
+```
+
+Follow the prompts to create account association values for your domain.
+
+## Step 6: Generate Metadata
+
+Create a `generateMetadata` function in your app page to improve SEO and discovery:
+
+```jsx
+// app/page.tsx or app/page.js
+import { Metadata } from "next";
+
+export const generateMetadata = (): Metadata => {
+  return {
+    title: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
+    description: `${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME} - A MiniKit App`,
+    openGraph: {
+      title: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
+      description: `${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME} - A MiniKit App`,
+      images: [
+        {
+          url: process.env.NEXT_PUBLIC_IMAGE_URL || "",
+          width: 1200,
+          height: 630,
+          alt: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
+      description: `${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME} - A MiniKit App`,
+      images: [process.env.NEXT_PUBLIC_IMAGE_URL || ""],
+    },
+  };
+};
+
+export default function Page() {
+  return <main>{/* Your app content */}</main>;
+}
+```
+
+## Step 7: Vercel Environment Configuration
+
+When deploying to Vercel, add all the environment variables to your project settings:
+
+1. Go to your Vercel project dashboard
+2. Navigate to Settings > Environment Variables
+3. Add all the environment variables from your `.env.local` file:
+   - `NEXT_PUBLIC_CDP_CLIENT_API_KEY`
+   - `NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME`
+   - `NEXT_PUBLIC_ICON_URL`
+   - `NEXT_PUBLIC_URL`
+   - `NEXT_PUBLIC_VERSION`
+   - `NEXT_PUBLIC_IMAGE_URL`
+   - `NEXT_PUBLIC_SPLASH_IMAGE_URL`
+   - `NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR`
+   - `FARCASTER_HEADER`
+   - `FARCASTER_PAYLOAD`
+   - `FARCASTER_SIGNATURE`
+4. Ensure all variables have the correct Production, Preview, and Development settings
+
+Additionally, configure these build settings:
+
+- Set the Node.js version to 18 or higher
+- Make sure that the output directory is set to `.next` if you're using Next.js
+
+## Step 8: Farcaster Publishing
+
+To publish your app on Farcaster:
+
+1. Ensure your app is deployed with a valid domain
+2. Verify your account association is correctly set up
+3. Make sure your `.well-known/farcaster.json` file is accessible
+4. Create a cast with a link to your app to share it with the Farcaster community
+
+For optimal discovery:
+
+- Use relevant hashtags when sharing your app
+- Include screenshots or GIFs showing your app in action
+- Tag relevant Farcaster channels or communities
+
+## Using MiniKit Hooks
+
+Once your app is set up with MiniKit, you can use its various hooks to enhance functionality:
+
+```jsx
+import {
+  useMiniKit,
+  useAddFrame,
+  useNotification,
+} from "@coinbase/onchainkit/minikit";
+import { useEffect } from "react";
+
+function MyComponent() {
+  const { setFrameReady, isFrameReady } = useMiniKit();
+  const addFrame = useAddFrame();
+  const sendNotification = useNotification();
+
+  // Set frame as ready when component mounts
+  useEffect(() => {
+    if (!isFrameReady) {
+      setFrameReady();
+    }
+  }, [isFrameReady, setFrameReady]);
+
+  const handleAddFrame = async () => {
+    const result = await addFrame();
+    if (result) {
+      console.log("Frame added:", result);
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleAddFrame}>Add to Frames</button>
+      <button
+        onClick={() => sendNotification({ title: "Hello", body: "World" })}
+      >
+        Send Notification
+      </button>
+    </div>
+  );
+}
+```
+
+## Troubleshooting
+
+If you encounter issues integrating MiniKit:
+
+- Check that all environment variables are correctly set
+- Verify your `.well-known/farcaster.json` file is accessible via your domain
+- Ensure you're using the latest versions of OnchainKit and viem
+- Check the browser console for any errors related to MiniKit initialization
+
+## Next Steps
+
+After integrating MiniKit into your app:
+
+- Explore the [official MiniKit documentation](https://docs.base.org/builderkits/minikit/overview?utm_source=sweetman&utm_medium=x&utm_campaign=minikit2&utm_id=ddr) for advanced features
+- Join the [Base Discord](https://discord.gg/buildonbase) for community support
+- Check out example MiniKit apps for inspiration
+
+For more detailed information about specific MiniKit hooks and components, refer to the [official documentation](https://docs.base.org/builderkits/minikit/overview?utm_source=sweetman&utm_medium=x&utm_campaign=minikit2&utm_id=ddr).
