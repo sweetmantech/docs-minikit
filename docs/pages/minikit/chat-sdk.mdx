@@ -15,6 +15,8 @@ This guide explains how to integrate the Chat SDK with your MiniKit application,
 
 There are two ways to set up the Chat SDK. Deploying with Vercel is the fastest way to get started by having a live deployment up and running, while also being able to develop locally immediately.
 
+> **Source Code:** The complete source code for the Chat SDK is available on [GitHub](https://github.com/vercel/ai-chatbot).
+
 ### Use 1-click Deploy with Vercel and Develop Locally
 
 1. Enter the 1-click deploy flow using [this link](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot&env=AUTH_SECRET&envDescription=Generate%20a%20random%20secret%20to%20use%20for%20authentication&envLink=https%3A%2F%2Fgenerate-secret.vercel.app%2F32&project-name=my-awesome-chatbot&repository-name=my-awesome-chatbot&demo-title=AI%20Chatbot&demo-description=An%20Open-Source%20AI%20Chatbot%20Template%20Built%20With%20Next.js%20and%20the%20AI%20SDK%20by%20Vercel&demo-url=https%3A%2F%2Fchat.vercel.ai&).
@@ -27,13 +29,37 @@ There are two ways to set up the Chat SDK. Deploying with Vercel is the fastest 
 
 ### Required Environment Variables
 
-The Chat SDK requires several environment variables similar to [MiniKit environment setup](/minikit/existing-app#step-4-env). The key variables are:
+The Chat SDK requires several environment variables. The key variables are:
 
-| Category                    | Key Variables                                         |
-| --------------------------- | ----------------------------------------------------- |
-| Database (Neon Postgres)    | `DATABASE_URL`, `POSTGRES_URL`, `POSTGRES_HOST`, etc. |
-| Storage (Vercel Blob store) | `BLOB_READ_WRITE_TOKEN`                               |
-| AI Provider                 | `XAI_API_KEY`                                         |
+```
+DATABASE_URL
+DATABASE_URL_UNPOOLED
+POSTGRES_URL
+POSTGRES_URL_NON_POOLING
+POSTGRES_URL_NO_SSL
+POSTGRES_HOST
+POSTGRES_USER
+POSTGRES_PASSWORD
+POSTGRES_DATABASE
+POSTGRES_PRISMA_URL
+PGHOST
+PGHOST_UNPOOLED
+PGUSER
+PGPASSWORD
+PGDATABASE
+```
+
+#### Storage (Blob)
+
+```
+BLOB_READ_WRITE_TOKEN
+```
+
+#### AI Provider
+
+````
+XAI_API_KEY
+```                                       |
 
 > For detailed environment variable management and deployment practices, see the [MiniKit Existing App Integration guide](/minikit/existing-app#step-7-vercel).
 
@@ -59,3 +85,4 @@ After setting up the Chat SDK, you can integrate it with your MiniKit applicatio
 This integration allows your MiniKit application to have powerful chat capabilities while maintaining the benefits of the MiniKit framework for Farcaster.
 
 For more details on customization options and advanced features, refer to the [official Chat SDK documentation](https://chat-sdk.dev/docs/).
+````
