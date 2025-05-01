@@ -12,6 +12,10 @@ export default defineConfig({
       link: "/minikit/quickstart",
     },
     {
+      text: "Chat SDK",
+      link: "/minikit/chat-sdk",
+    },
+    {
       text: "Existing App Integration",
       link: "/minikit/existing-app",
     },
