@@ -25,6 +25,18 @@ There are two ways to set up the Chat SDK. Deploying with Vercel is the fastest 
 6. Continue development locally
 7. Push changes and recreate deployment automatically
 
+### Required Environment Variables
+
+The Chat SDK requires several environment variables similar to [MiniKit environment setup](/minikit/existing-app#step-4-env). The key variables are:
+
+| Category                    | Key Variables                                         |
+| --------------------------- | ----------------------------------------------------- |
+| Database (Neon Postgres)    | `DATABASE_URL`, `POSTGRES_URL`, `POSTGRES_HOST`, etc. |
+| Storage (Vercel Blob store) | `BLOB_READ_WRITE_TOKEN`                               |
+| AI Provider                 | `XAI_API_KEY`                                         |
+
+> For detailed environment variable management and deployment practices, see the [MiniKit Existing App Integration guide](/minikit/existing-app#step-7-vercel).
+
 ### Develop Locally and Deploy Later
 
 1. Fork the Chat SDK repository on GitHub
@@ -37,7 +49,7 @@ There are two ways to set up the Chat SDK. Deploying with Vercel is the fastest 
 
 ## Integrating with MiniKit
 
-After setting up the Chat SDK, you can integrate it with your MiniKit application:
+After setting up the Chat SDK, you can integrate it with your MiniKit application following similar steps to the [MiniKit Provider setup](/minikit/existing-app#step-2-minikit-provider):
 
 1. Import the necessary components from the Chat SDK
 2. Add the Chat SDK provider to your MiniKit application
