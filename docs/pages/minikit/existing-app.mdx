@@ -41,6 +41,8 @@ MiniKit requires the latest version of viem for proper integration with blockcha
 Wrap your application with the `providers/MiniKitProvider.tsx` component to enable MiniKit hooks anywhere in your app:
 
 ```jsx
+"use client";
+
 import { MiniKitProvider as MKProvider } from "@coinbase/onchainkit/minikit";
 import { ReactNode } from "react";
 import { base } from "viem/chains";
