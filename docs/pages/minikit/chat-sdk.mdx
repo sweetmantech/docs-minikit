@@ -1,0 +1,40 @@
+# MiniKit + Chat SDK
+
+This guide explains how to integrate the Chat SDK with your MiniKit application, providing you with a powerful solution for adding chat functionality to your application.
+
+## Setup
+
+There are two ways to set up the Chat SDK. Deploying with Vercel is the fastest way to get started by having a live deployment up and running, while also being able to develop locally immediately.
+
+### Use 1-click Deploy with Vercel and Develop Locally
+
+1. Enter the 1-click deploy flow using [this link](https://chat-sdk.dev).
+2. Create new project and repository of the Chat SDK
+3. Add integrations like Neon Postgres and xAI Grok to your project
+4. Clone your repository locally and link to your project using `vc link`
+5. Link environment variables using `vc env pull`
+6. Continue development locally
+7. Push changes and recreate deployment automatically
+
+### Develop Locally and Deploy Later
+
+1. Fork the Chat SDK repository on GitHub
+2. Clone your forked repository locally
+3. Create a PostgreSQL database and retrieve its connection string to set the `DATABASE_URL` environment variable in `.env.local`
+4. Create a Vercel Blob store and set the `BLOB_READ_WRITE_TOKEN` environment variable in `.env.local`
+5. Sign up for a developer account on xAI's portal and create a new API key to set the `GROK_API_KEY` environment variable in `.env.local`
+6. Install dependencies using `pnpm install`
+7. Start development server using `pnpm dev`
+
+## Integrating with MiniKit
+
+After setting up the Chat SDK, you can integrate it with your MiniKit application:
+
+1. Import the necessary components from the Chat SDK
+2. Add the Chat SDK provider to your MiniKit application
+3. Customize the chat interface to match your application's design
+4. Configure the AI model and behaviors to suit your use case
+
+This integration allows your MiniKit application to have powerful chat capabilities while maintaining the benefits of the MiniKit framework for Farcaster.
+
+For more details on customization options and advanced features, refer to the [official Chat SDK documentation](https://chat-sdk.dev/docs/).
